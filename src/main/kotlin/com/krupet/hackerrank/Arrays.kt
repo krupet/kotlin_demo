@@ -1,5 +1,7 @@
 package com.krupet.hackerrank
 
+import java.util.*
+
 fun minimumBribes(q: Array<Int>): Unit {
     var bribes = 0
     val size = q.size
@@ -17,11 +19,7 @@ fun minimumBribes(q: Array<Int>): Unit {
     println(bribes)
 }
 
-fun main() {
-    minimumBribes(arrayOf(1, 2, 5, 3, 4, 7, 8, 6))
-    minimumBribes(arrayOf(5, 1, 2, 3, 7, 8, 6, 4))
-    minimumBribes(arrayOf(1, 2, 5, 3, 7, 8, 6, 4))
-}
+
 
 fun hourglassSum(arr: Array<Array<Int>>): Int {
 
@@ -94,4 +92,51 @@ fun arrayManipulation(n: Int, queries: Array<Array<Int>>): Long {
     }
 
     return arr.max()!!.toLong()
+}
+
+
+fun freqQuery(queries: Array<Array<Int>>): Array<Int> {
+
+    val countMap = mutableMapOf<Int, Int>()
+    val freqMap = mutableMapOf<Int, Int>()
+    val result: MutableList<Int> = LinkedList()
+
+    for (query in queries) {
+        val value = query[1]
+        when (query[0]) {
+            1 -> {
+                val count = countMap[value] ?: 0
+                countMap[value] = count + 1
+
+                freqMap[count] = (freqMap[count] ?: 0) - 1
+                freqMap[count + 1] = (freqMap[count + 1] ?: 0) + 1
+            }
+            2 -> {
+                val count = countMap[value] ?: 0
+                if (count > 0) {
+                    countMap[value] = if (count == 0) count else count - 1
+
+                    freqMap[count] = (freqMap[count] ?: 0) - 1
+                    freqMap[count - 1] = (freqMap[count - 1] ?: 0) + 1
+                }
+            }
+            3 -> if ((freqMap[value] ?: 0) > 0 ) result.add(1) else result.add(0)
+        }
+    }
+
+    return result.toTypedArray()
+}
+
+
+fun main() {
+    freqQuery(arrayOf(
+        arrayOf(1, 5),
+        arrayOf(1, 6),
+        arrayOf(3, 2),
+        arrayOf(1, 10),
+        arrayOf(1, 10),
+        arrayOf(1, 6),
+        arrayOf(2, 5),
+        arrayOf(3, 2)
+    )).forEach { println(it) }
 }
